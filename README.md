@@ -66,3 +66,49 @@ data data6;
 	         else put "różne";
 run;
 ~~~
+
+datetime
+
+~~~~sas
+/* datetime a.k.a. timestamp */
+
+/*DATA SASOWA: Liczba dni, które upłynęły od 1 stycznia 1960.*/
+
+/*DATETIME SASOWY: Liczba sekund, które upłynęły od 1 stycznia 1960 od początku dnia. */
+
+data data7;
+	d = "8oct2025"d;
+	dt = "8oct2025:12:34:56"dt;
+
+	format d /*yymmdd10.*/ dt datetime.;
+run;
+
+
+data data8;
+	d = 86400;
+	dt = "8oct2025:12:34:56"dt;
+
+	format d yymmdd10. dt datetime.;
+run;
+
+
+data data8;
+	d = today();
+	dt = "18oct2025:12:34:56"dt;
+
+	dp = DATEPART(dt);
+
+	format d dp yymmdd10. dt datetime.;
+run;
+
+data data8;
+	d = today();
+	dt = "18oct2025:12:34:56"dt;
+
+	d2 = d*86400 + "12:34:56"t;
+	d3 = DHMS(d, 12, 34, 56);
+
+	format d yymmdd10. d2 d3 dt datetime.;
+run;
+~~~~
+
