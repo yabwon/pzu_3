@@ -166,5 +166,75 @@ run;
 
 proc contents data=work.storm_complete;
 run;
+
+
+/*
+
+	if substr(Basin,2,1)="I" 
+		then Ocean="Indian";
+    else Ocean="blablabla";
+
+
+
+Basin="EP"
+
+"P"=?="I" -> fałsz 0
+
+*/
+
+
+data storm_complete;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	length Ocean $ 8;
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	select;
+		when(substr(Basin,2,1)="I") Ocean="Indian";
+		when(substr(Basin,2,1)="A") Ocean="Atlantic";
+		otherwise                   Ocean="Pacific";
+	end;
+
+	drop EndDate;
+run;
+
+data storm_complete;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	length Ocean $ 8;
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	select;
+		when(substr(Basin,2,1)="I") Ocean="Indian";
+		when(substr(Basin,2,1)="A") Ocean="Atlantic";
+		when(substr(Basin,2,1)="P") Ocean="Pacific";
+		otherwise PUTLOG "nieznane dane";
+	end;
+
+	drop EndDate;
+run;
+
+data test;
+	x=1;y=2;output;
+	x=3;y=4;output;
+run;
+
+data test2;
+	set test;
+	z = x + y;
+run;
+
+/*
+PUTLOG _ALL_;
+*/
+
+data test2;                             PUTLOG "1)" _ALL_;
+	set test;                           PUTLOG "2)" _ALL_;
+	z = x + y;                          PUTLOG "3)" _ALL_; PUTLOG;
+run;
 ~~~~
 
