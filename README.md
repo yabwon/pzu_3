@@ -236,5 +236,61 @@ data test2;                             PUTLOG "1)" _ALL_;
 	set test;                           PUTLOG "2)" _ALL_;
 	z = x + y;                          PUTLOG "3)" _ALL_; PUTLOG;
 run;
+
+
+
+
+data test3;
+	set test;
+	z = x + y;
+	OUTPUT;
+run;
+
+
+data test4;
+	set test;
+	z = x + y;
+	OUTPUT;
+	OUTPUT;
+run;
+
+
+data test5;
+	set test;
+	z = x + y;
+	OUTPUT;
+	z = x * y;
+	OUTPUT;
+run;
+
+
+
+data test6_dodawanie test6_mnozenie;
+	set test;
+	z = x + y;
+	OUTPUT test6_dodawanie;
+	z = x * y;
+	OUTPUT test6_mnozenie;
+run;
+
+
+
+
+data Indian Atlantic Pacific;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	select;
+		when(substr(Basin,2,1)="I") OUTPUT Indian;
+		when(substr(Basin,2,1)="A") OUTPUT Atlantic;
+		when(substr(Basin,2,1)="P") OUTPUT Pacific;
+		otherwise PUTLOG "nieznane dane";
+	end;
+
+	drop EndDate;
+run;
 ~~~~
 
