@@ -112,3 +112,59 @@ data data8;
 run;
 ~~~~
 
+procesowanie DATA stepu
+
+~~~~sas
+data storm_complete;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	length Ocean $ 8;
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	if substr(Basin,2,1)="I" 
+		then Ocean="Indian";
+	else if substr(Basin,2,1)="A" 
+		then Ocean="Atlantic";
+	else Ocean="Pacific";
+
+	drop EndDate;
+run;
+
+/* faza kompilacji */
+/*
+1) sprawdzenie składni
+2) budujemy wektor PDV (Program Data Vector) * na podstawie wejściowych danych (SET,MERGE,itd.) oraz struktury kodu
+3) ustalenie długości i kolejności zmiennych, 
+4) ustalenie utrzymywania(KEEP) i wyrzucania(DROP) zmiennych
+5) ustalenie czy zmienne będą reinicjalizowane brkiem danych (RETAIN)
+6) filtrowanie danych na wejściu (WHERE)
+7) budowa nagłówka (deskryptor, metadane) zbiru wynikwego (o ile jest tworzony)
+
+
+>Name Char 15 - fitrowanie z WHERE  
+>Basin Char 2   
+>MaxWind Num 8   
+>StartDate Num 8 DATE9. 
+*EndDate Num 8 DATE9. - drop
+>Ocean Char 8
+>StormLength Num 8 - inicjalizacja brakiem danych
+
+*_ERROR_ Num
+*_N_ Num
+
+*/
+
+/* faza wykonania  */
+/*
+	wektor PDV
+	pętla główna (implicite DATA step loop)
+	output
+*/
+
+
+proc contents data=work.storm_complete;
+run;
+~~~~
+
