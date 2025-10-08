@@ -286,11 +286,111 @@ data Indian Atlantic Pacific;
 	select;
 		when(substr(Basin,2,1)="I") OUTPUT Indian;
 		when(substr(Basin,2,1)="A") OUTPUT Atlantic;
-		when(substr(Basin,2,1)="P") OUTPUT Pacific;
-		otherwise PUTLOG "nieznane dane";
+		/*when(substr(Basin,2,1)="P") OUTPUT Pacific;*/
+		otherwise; /*PUTLOG "nieznane dane";*/
 	end;
 
 	drop EndDate;
 run;
+
+
+
+
+
+
+data Indian2 Atlantic2 Pacific2;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	select;
+		when(substr(Basin,2,1)="I") OUTPUT Indian2;
+		when(substr(Basin,2,1)="A") OUTPUT Atlantic2;
+		when(substr(Basin,2,1)="P") OUTPUT Pacific2;
+		otherwise PUTLOG "nieznane dane";
+	end;
+
+	/*drop EndDate;*/ 
+	keep Basin StormLength;
+run;
+
+
+
+/*
+drop=
+keep=
+*/
+
+
+
+data Indian3 Atlantic3 Pacific3;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	select;
+		when(substr(Basin,2,1)="I") OUTPUT Indian3;
+		when(substr(Basin,2,1)="A") OUTPUT Atlantic3;
+		when(substr(Basin,2,1)="P") OUTPUT Pacific3;
+		otherwise PUTLOG "nieznane dane";
+	end;
+
+	drop Basin EndDate; /* !!! */
+	keep Basin StormLength; /* !!! */
+run;
+
+
+
+
+data 
+Indian4 
+Atlantic4(drop=Basin EndDate) 
+Pacific4(keep=Basin StormLength)
+;
+	set pg2.storm_summary_small; 
+	where Name is not missing;
+
+	Basin=upcase(Basin);
+	StormLength=EndDate-StartDate;
+
+	select;
+		when(substr(Basin,2,1)="I") OUTPUT Indian4;
+		when(substr(Basin,2,1)="A") OUTPUT Atlantic4;
+		when(substr(Basin,2,1)="P") OUTPUT Pacific4;
+		otherwise PUTLOG "nieznane dane";
+	end;
+run;
+
+
+data ALL_oceans;
+	set pg2.storm_summary_small(drop=basin); 
+	where Name is not missing;
+
+	StormLength=EndDate-StartDate;
+run;
+
+
+
+data ALL_oceans;
+	set pg2.storm_summary_small(drop=b:); 
+	where Name is not missing;
+
+	StormLength=EndDate-StartDate;
+run;
+
+
+/* SASHELP.class */
+
+/* 
+Utworz dwa zbiory w podzialen na dzieci powyzej 13 lat i ponizej,
+w pierwszym zachowaj wage imie i plec
+w drugim zachowaj wzrost imie i plec
+
+
+*/
 ~~~~
 
