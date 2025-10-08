@@ -394,3 +394,22 @@ w drugim zachowaj wzrost imie i plec
 */
 ~~~~
 
+
+praca domowa
+
+~~~~sas
+/* praca domowa */
+/* zastanow sie (bez uruchamiania kodu) jaki bedzie wynik nastepujacego przetwarzania */
+
+data test;
+	x=1;y=2;output;
+	x=3;y=4;output;
+run;
+
+data testPracaDomowa;
+	output;
+	set test;
+	z = x + y;
+	output;
+run;
+~~~~
