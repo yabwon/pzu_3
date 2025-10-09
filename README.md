@@ -557,9 +557,9 @@ input x $1. y;
 cards;
 A 1
 A 2
-B 1
+B 3
 A 3
-B 2
+B 3
 B 3
 B .
 C 1
@@ -584,9 +584,9 @@ run;
 wejscie:
 A 1
 A 2
-B 1
+B 3
 A 3
-B 2
+B 3
 B 3
 B .
 C 1
@@ -601,8 +601,8 @@ A 2
 A 3
 A 4
 
-B 1
-B 2
+B 3
+B 3
 B 3
 B .
 
@@ -620,12 +620,12 @@ A 4 koniec grupy
 ---
   10
 
-B 1
-B 2
+B 3
+B 3
 B 3
 B .
 ---
-  6
+  9
 
 C 1
 C 2
@@ -636,7 +636,7 @@ C 4
 
 wypisanie wyniku
 A 10
-B 6
+B 9
 C 10
 */
 ~~~~
