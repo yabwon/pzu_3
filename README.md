@@ -687,7 +687,7 @@ run;
 
 
 /* mamy zbior HAVE */
-/* sjumuluj dane ze zbior HAVE do posatci jak nizej:
+/* skumuluj dane ze zbior HAVE do posatci jak nizej:
 A 10
 B 9
 C 10
