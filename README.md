@@ -432,4 +432,91 @@ C 3
 C 4
 ;
 run;
+
+
+/* zsumujmy wszystkie wartosci zmiennej Y 
+   i wypiszmy je na koncu procesowania
+*/
+
+
+data want; 
+	set have;
+	suma = suma + y; /* ? */
+run;
+
+/* jak sas pracuje z brakami danych ? */
+
+data _null_;
+x = . + 1;
+
+y = . * -1;
+
+z = . / 1;
+
+t = 1 / .;
+
+u = . ** 2;
+
+w = . < 1;
+putlog _all_;
+run;
+
+
+
+data want; 
+	set have;
+	RETAIN suma 0;
+	suma = suma + y; /* ?? */
+run;
+
+
+data want; 
+	set have;
+	RETAIN suma 0;
+	if y ^= . then
+		do;
+			suma = suma + y; 
+		end;
+run;
+
+data want; 
+	set have;
+	RETAIN suma 0;
+	suma = sum(suma, y); 
+run;
+
+data _null_;
+x = sum(1,.,2);
+y = 1 + . + 2;
+putlog _ALL_;
+run;
+
+data _null_;
+x = sum(.,.,.);
+putlog _ALL_;
+run;
+
+
+/* SUM STATEMENT */
+data want; 
+	set have;
+	suma + y; 
+run;
+
+/* zmienna_kumulujaca + wyrazenie; */
+
+data want; 
+	set have;
+	suma + (y**2); 
+run;
+
+data want; 
+	set have;
+	suma + 1; 
+run;
+
+data want; 
+	set have;
+	suma + (y ^= .); 
+run;
 ~~~~
