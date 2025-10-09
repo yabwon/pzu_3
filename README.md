@@ -413,3 +413,23 @@ data testPracaDomowa;
 	output;
 run;
 ~~~~
+
+~~~~sas
+data have;
+input x $1. y;
+cards;
+A 1
+A 2
+B 1
+A 3
+B 2
+B 3
+B .
+C 1
+C 2
+A 4
+C 3
+C 4
+;
+run;
+~~~~
