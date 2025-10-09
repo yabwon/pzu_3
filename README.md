@@ -977,4 +977,100 @@ data want;
 run;
 
 /* funkcje dla daty i czasu */
+
+data _null_;
+t = today();
+
+put t=;
+
+put t= yymmdd10.;
+
+r=year(t);
+m=month(t);
+put r= m=;
+run;
+
+/*
+INTNX(interval <multiple><.shift-index>, start-from, increment <, 'alignment'>)
+*/
+
+data _null_;
+t = today();
+put t=;
+put t= yymmdd10.;
+
+nt = INTNX("month",t,0,"end");
+put nt= yymmdd10.;
+
+nt = INTNX("week",t,0,"end");
+put nt= yymmdd10.;
+
+nt = INTNX("year",t,0,"end");
+put nt= yymmdd10.;
+run;
+
+
+data want;
+	set have2(keep=a:);
+    L2 = largest(2, of a1-numeric-a6);
+	put _all_;
+run;
+
+data _null_;
+	call streaminit(12345);
+	do i = 1 to 10;
+		x = RAND('INTEGER',1,6);
+		put x=;
+	end;
+run;
+
+data _null_;
+	x = 333 + 1/3;
+	put x=;
+	y = ROUND(x,0.01);
+	put y=;
+
+	y = ROUND(x,0.0001);
+	put y=;
+
+	y = ROUND(x,1);
+	put y=;
+
+	y = ROUND(x,100);
+	put y=;
+
+	i = INT(x);
+	f = floor(x);
+	c = ceil(x);
+
+	put i= f= c=;
+run;
+
+/* datepart() i timepart() */
+
+/* INTCK */
+
+data _null_;
+	d1 = today();
+	d2 = today()-65;
+	put d1= yymmdd10. d2= yymmdd10.;
+
+	m = intck("month",d1,d2);
+
+	put m=;
+run;
+
+data _null_;
+	d1 = today(); /* 2025-10-09 */
+	d2 = today()-15;
+	put d1= yymmdd10. d2= yymmdd10.;
+
+	md = intck("month",d2,d1,"D");
+	put md=;
+
+	mc = intck("month",d2,d1,"C");
+	put mc=;
+run;
+
+
 ~~~~
