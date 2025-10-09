@@ -1017,3 +1017,133 @@ data want;
 run;
 
 ~~~~
+
+formaty uzytkownika
+
+~~~~sas
+/*++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+Proc FORMAT;
+/* 4 typy
+ f num
+ f char
+ i num
+ i char
+*/
+/*
+<value/invalue> <$> NAZWA (opcje)
+spcyfikacja
+w formie
+
+klucz=wartosc
+klucz=wartosc
+...
+
+<OTHER=>
+;
+*/
+run;
+
+Proc Format;
+VALUE nowy
+
+low-<0="ujemne"
+     0="zero"
+0<-high="dodatnie"
+OTHER="brak danych"
+;
+run;
+
+libname x "S:\workshop\test_formatu";
+data x.test;
+do i = -17, -1, -0.5, 0, 1, 42, ., .;
+	put i= i= nowy.;
+	output;
+end;
+
+format i nowy.;
+run;
+
+proc print data=x.test;
+run;
+
+options nofmterr;
+
+/* format ze zbioru */
+
+data slownik;
+	klucz="C"; opis="Centrala"; output;
+	klucz="P"; opis="Poznań"; output;
+	klucz="K"; opis="Katowice"; output;
+run;
+
+data formatZeZbioru;
+	set slownik end=_E_;
+
+start = klucz;
+label = opis;
+FMTNAME="$zeZbioru";
+typ="c";
+output;
+
+if _E_=1;
+HLO="O";
+label="INNE!!";
+output;
+
+run;
+
+Proc Format cntlin=formatZeZbioru;
+run;
+
+
+data _null_;
+	do i = "C","P","K","I";
+		put i= i= zeZbioru.;
+	end;
+run;
+
+/* dlaczego to jest fajne? */
+
+data duzy;
+id=1; faktura=123;output;
+id=2; faktura=123;output;
+id=3; faktura=123;output;
+id=4; faktura=123;output;
+id=3; faktura=123;output;
+id=4; faktura=123;output;
+id=1; faktura=123;output;
+run;
+
+data maly;
+id=2;output;
+id=4;output;
+run;
+
+data maly;
+set maly end=_E_;
+FMTNAME="maly";
+typ="n";
+start=id;
+label=1;
+output;
+
+if _E_=1;
+HLO="O";
+label="0";
+output;
+
+run;
+
+
+
+
+Proc Format cntlin=maly;
+run;
+
+data want;
+	set duzy;
+	where put(id,maly.) = "1";
+run;
+~~~~
+
