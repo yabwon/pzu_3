@@ -687,10 +687,90 @@ run;
 
 
 /* mamy zbior HAVE */
-/* skumuluj dane ze zbior HAVE do posatci jak nizej:
+/* skumuluj dane ze zbioru HAVE do posatci jak nizej:
 A 10
 B 9
 C 10
 D 16
 */
+data kumulacja;
+	set posortowanyXY;
+	BY x;
+	
+	if first.X = 1 then suma=0;
+	suma+y;
+
+	if last.x;
+	output;
+
+	drop y;
+run;
+
+
+/* filtrowanie */
+
+data filtr_zly; /* !!! */
+	set posortowanyXY;
+	BY x;
+	
+	where first.X = 1;
+run;
+
+
+data filtr_ok;
+	set posortowanyXY;
+	BY x;
+	
+	if first.X;
+	output;
+run;
+
+/* grupy nie sortowane */
+
+
+data haveNS;
+input x $1. y;
+cards;
+A 1
+A 2
+A 3
+A 4
+C 1
+C 2
+C 3
+C 4
+B 3
+B 3
+B 3
+B .
+;
+run;
+
+data kumulacjaNS;
+	set haveNS;
+	BY x; /* !!! */
+	
+	if first.X = 1 then suma=0;
+	suma+y;
+
+	if last.x;
+	output;
+
+	drop y;
+run;
+
+
+data kumulacjaNS;
+	set haveNS;
+	BY x NOTSORTED; 
+	
+	if first.X = 1 then suma=0;
+	suma+y;
+
+	if last.x;
+	output;
+
+	drop y;
+run;
+
 ~~~~
