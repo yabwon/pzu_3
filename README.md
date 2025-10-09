@@ -414,6 +414,7 @@ data testPracaDomowa;
 run;
 ~~~~
 
+kumulowanie
 ~~~~sas
 data have;
 input x $1. y;
@@ -519,4 +520,123 @@ data want;
 	set have;
 	suma + (y ^= .); 
 run;
+
+
+
+data want; 
+	set sashelp.class;
+    h + height;
+	w + weight;
+	b + weight*weight / height;
+run;
+
+/*
+bmi* -> (waga**2/wzrost)
+*/
+
+
+
+data want; /* _n_ */
+	set sashelp.class end=_E_;
+    h + (-height);
+	w + weight;
+	b + weight*weight / height;
+
+	if _E_=1 then output;
+	keep h w b;
+run;
+
+~~~~
+
+BY-GROUP processing
+~~~~sas
+/*-----------------------*/
+
+data have;
+input x $1. y;
+cards;
+A 1
+A 2
+B 1
+A 3
+B 2
+B 3
+B .
+C 1
+C 2
+A 4
+C 3
+C 4
+;
+run;
+
+data want; 
+	set have end=_E_;
+	suma + y; 
+	if 1=_E_ then output;
+run;
+
+/* BY-GROUP processing */
+/* przetwarzanie w grupach */
+
+/*
+
+wejscie:
+A 1
+A 2
+B 1
+A 3
+B 2
+B 3
+B .
+C 1
+C 2
+A 4
+C 3
+C 4
+
+sortowanie:
+A 1
+A 2
+A 3
+A 4
+
+B 1
+B 2
+B 3
+B .
+
+C 1
+C 2
+C 3
+C 4
+
+suma w grupach
+
+A 1 poczatek grupy
+A 2
+A 3
+A 4 koniec grupy
+---
+  10
+
+B 1
+B 2
+B 3
+B .
+---
+  6
+
+C 1
+C 2
+C 3
+C 4
+---
+  10
+
+wypisanie wyniku
+A 10
+B 6
+C 10
+*/
 ~~~~
