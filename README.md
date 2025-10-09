@@ -567,6 +567,7 @@ C 2
 A 4
 C 3
 C 4
+D 16
 ;
 run;
 
@@ -638,5 +639,58 @@ wypisanie wyniku
 A 10
 B 9
 C 10
+D 16
+*/
+
+PROC SORT data=WORK.HAVE out=WORK.posortowany ;
+BY x;
+run; 
+
+data want;
+	set work.posortowany;
+    BY x;
+	putlog _ALL_;
+run;
+
+/* unikalne wartosci zmiennej x */
+data UW_X;
+	set work.posortowany;
+    BY x;
+	if first.x = 1 then output;
+	keep x;
+run;
+
+/*
+wybierz druga i trzecia najwieksza wartosc Y w kazdej grupie (o ile istaneja)
+*/
+
+PROC SORT data=WORK.HAVE out=WORK.posortowanyXY ;
+BY x descending y ;
+run; 
+
+data max_2i3;
+	set posortowanyXY;
+	BY x descending y;
+putlog _ALL_;
+run;
+
+data max_2i3;
+	set posortowanyXY;
+	BY x;
+	
+	if first.X = 1 then n=0;
+	n+1;
+
+	/*if N = 2 OR N = 3 then output;*/
+	if N in (2 3) then output;
+run;
+
+
+/* mamy zbior HAVE */
+/* sjumuluj dane ze zbior HAVE do posatci jak nizej:
+A 10
+B 9
+C 10
+D 16
 */
 ~~~~
