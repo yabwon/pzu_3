@@ -959,4 +959,61 @@ sc3 = scan(t, 5, ", ", "M"); /* a,b,c,,,f */
 put (_ALL_) (=/);
 run;
 
+data _null_;
+t = "Ala   ma   kota   Filemona,   i   żółwia";
+
+c1 = compress(t," ","P");
+c2 = compbl(t);
+c3 = translate(t,"!!","Aa");
+c4 = tranwrd(t,"Ala","Basia");
+
+razem = CATX("$", of c1-c4); /* CAT CATS CATX CATQ */
+
+put (_ALL_) (=/);
+run;
+
+
+/* PUT() i INPUT() */
+
+data _null_;
+	x = "234" + 1000;
+
+	y = 123 !! "ABC";
+
+	put x= y=;
+run;
+
+
+data data1;
+	l = input("234", best.);
+
+	x = l + 1000;
+
+	put x=;
+
+	t = put(123, 3.);
+
+	y = t !! "ABC";
+
+	put y=;
+run;
+
+
+data have;
+	data='2025-10-09';
+run;
+
+data want;
+	set have;
+
+	d = intnx('month', data, 0, "end"); /* !!!!!!!! */
+
+data want;
+	set have;
+
+	d = intnx('month', input(data, yymmdd10.), 0, "end");
+
+	format d date11.;
+run;
+
 ~~~~
