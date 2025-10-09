@@ -916,3 +916,65 @@ set
 run;
 ~~~~
 
+~~~~sas
+data have2;
+  a1=411;
+  a2=312;
+  a3=213;
+  a4=114;
+  a5="Aa";
+  a6="Bb";
+  bx=100;
+  by=200;
+  bz=300;
+  output;
+run;
+
+/*
+data _null_;
+x = funkcja(.....);
+
+CALL wywolanie(.....); - rutyna(.....)
+run;
+*/
+
+data want;
+	set have2(keep=a:);
+	put _all_;
+	call sortn(of a1-numeric-a6);
+	put _all_;
+run;
+
+/* pytanie od Karoliny, czy "numeric" jest konieczne? */
+data want;
+	set have2(keep=a:);
+	put _all_;
+	call sortn(of a1--a6); /* !!! */
+	put _all_;
+run;
+
+/*
+data want;
+	set have2(keep=a:);
+	
+	call sortn(of a1-numeric-a6);
+	
+    array X[4] a1-numeric-a6;
+
+	do i = 4 to 1 by -1;
+		put X[i]=;
+	end;
+run;
+*/
+
+data want;
+	set have2(keep=a:);
+	s = sum(of a1-numeric-a6);
+	m = mean(of a1-numeric-a6);
+	n = n(of a1-numeric-a6);
+	v = var(of a1-numeric-a6);
+	put _all_;
+run;
+
+/* funkcje dla daty i czasu */
+~~~~
