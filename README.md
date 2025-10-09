@@ -781,143 +781,6 @@ funkcje
 /* praca z funkcjami */
 
 data have2;
-  a1=11;
-  a2=12;
-  a3=13;
-  a4=14;
-  a5="Aa";
-  a6="Bb";
-  bx=100;
-  by=200;
-  bz=300;
-  output;
-run;
-
-data _null_;
-	set have2;
-	x = SUM(a1,a2,a3,a4);
-	put x=;
-run;
-
-/* listy specjalne */
-/*
-_ALL_
-_NUMERIC_
-_CHARACTER_
-*/
-
-data _null_;
-	set have2;
-	x = SUM(_NUMERIC_); /* !!! */
-	put x=;
-run;
-
-data _null_;
-	set have2;
-	x = SUM(OF _NUMERIC_); /* ok, oprator of */
-	put x=;
-run;
-
-/* lista numerowana */
-
-/* prefix<NUMERYCZNY sufix>, np. 
-   z1 z2 z3 
-*/
-
-data _null_;
-	set have2;
-	x = SUM(OF a1-a4); /* ok, oprator of */
-	put x=;
-	y = SUM(   a1-a4); /* !!! */
-	put y=;
-run;
-
-/* lista zakresowa */
-/* zmienna1--zmienna2 */
-
-data _null_;
-	set have2;
-	x = SUM(OF a2--a4); /* ok, oprator of */
-	put x=;
-	y = SUM(   a2--a4); /* !!! */
-	put y=;
-run;
-
-/* zmienna1-numeric-zmienna2 */
-/* zmienna1-character-zmienna2 */
-
-data _null_;
-	set have2;
-	x = SUM(OF a1--bz); /* ok, oprator of */
-	put x=;
-run;
-
-data _null_;
-	set have2;
-	x = SUM(OF a1-numeric-bz); /* ok, oprator of */
-	put x=;
-run;
-
-/* lista prefiksowa */
-/* wsp.prefiks{jakis.sufix} */
-/* bx by bz */
-
-data _null_;
-	set have2;
-	x = SUM(OF b:); /* ok, oprator of */
-	put x=;
-run;
-
-/* keep= drop= */
-data want;
-	set have2(keep=_character_);
-run;
-
-data want;
-	set have2(keep=a1-a6);
-run;
-
-data want;
-	set have2(keep=a1-numeric-a6);
-run;
-
-data want;
-	set have2(keep=b:);
-run;
-
-/* podobnie (ale nie tak samo) dla zbiorow */
-
-data
-	raport_202510
-	raport_202509
-	raport_202508
-;
-set sashelp.class;
-run;
-
-data razem1;
-set
-	raport_202510
-	raport_202509
-	raport_202508
-;
-run;
-
-data razem2;
-set
-	raport_202508-raport_202510
-;
-run;
-
-data razem3;
-set
-	raport_2025:
-;
-run;
-~~~~
-
-~~~~sas
-data have2;
   a1=411;
   a2=312;
   a3=213;
@@ -1072,5 +935,28 @@ data _null_;
 	put mc=;
 run;
 
+data _null_;
+	Y = (d1-d2)/365.25;
+run;
+
+
+/* funkcje na tekstach */
+data _null_;
+t = "Ala ma kota Filemona, i żółwia";
+
+u = upcase(t);
+
+l = length(t);
+k = klength(t);
+
+s = substr(t,5,10);
+
+sc = scan(t, 4, ", ");
+
+sc2 = scan(t, 5, ", ");
+sc3 = scan(t, 5, ", ", "M"); /* a,b,c,,,f */
+
+put (_ALL_) (=/);
+run;
 
 ~~~~
