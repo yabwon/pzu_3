@@ -1967,3 +1967,145 @@ data abc;
 	drop oferta;
 run;
 ~~~~
+
+transponowanie
+
+~~~~sas
+
+/*
+XXXXXXXXXXXXXXXXXXXXXXXX
+
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+x
+*/
+
+/*transponowanie danych*/
+
+data A;
+a=1;b=2;c=3; output;
+a=10;b=20;c=30; output;
+run;
+
+
+data B;
+	set A;
+	zmienna = "A";
+	wartosc=a;
+	output;
+	zmienna = "B";
+	wartosc=b;
+	output;
+	zmienna = "C";
+	wartosc=c;
+	output;
+
+	keep zmienna wartosc;
+run;
+
+/* proc transpose */
+data A;
+	id="A";a=1;b=2;c=3;d=4;e=5;f=6; output;
+	id="B";a=10;b=20;c=30;d=40;e=50;f=60; output;
+run;
+
+
+proc transpose data=A;
+run;
+
+/*
+1 2 3
+4 5 6
+
+
+1 4
+2 5
+3 6
+*/
+
+proc transpose data=A out=A_T;
+	var _all_;
+run;
+
+proc transpose data=A out=A_T;
+	var _numeric_;
+run;
+
+proc transpose data=A out=A_T;
+by ID; /* ! */
+var a-numeric-f;
+run;
+
+proc transpose data=A out=A_T 
+name=ZMIENNA
+prefix=wartosc
+;
+by ID;
+var a-numeric-f;
+run;
+
+proc transpose 
+	data=A 
+	out=A_T(rename=(col1=wartosc)) 
+	name=ZMIENNA
+;
+by ID;
+var a-numeric-f;
+run;
+
+
+
+proc transpose 
+	data=A_T
+	out=A_odtranponowany(drop=_name_)
+	;
+by ID;
+id zmienna;
+var wartosc;
+run;
+
+
+/* ======== */
+
+/* transpozycja z tablicami */
+data A;
+	id="A";a=1;b=2;c=3;d=4;e=5;f=6; output;
+	id="B";a=10;b=20;c=30;d=40;e=50;f=60; output;
+run;
+
+
+data A_Tarr;
+	set A;
+	
+	array TAB[*] a-numeric-f;
+
+	do i = 1 to dim(TAB);
+		ZMIENNA=VNAME(TAB[i]);
+		wartosc=TAB[i];
+		output;
+	end;
+drop i a-numeric-f;
+run;
+
+
+data A_Tarr2;
+	set A;
+	
+	array TAB[*] a-numeric-f;
+
+	do i = dim(TAB) to 1 by -1;
+		ZMIENNA=VNAME(TAB[i]);
+		wartosc=TAB[i];
+		output;
+	end;
+drop i a-numeric-f;
+run;
+~~~~
