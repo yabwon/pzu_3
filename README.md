@@ -1542,3 +1542,34 @@ data razem4B;
 	set E A B ; /* ! */ 
 run;
 ~~~~
+
+proc append
+~~~~sas
+/* **** */
+
+
+data baza;
+  id = 00; kod_lokalizacji = "CC"; output;
+  id = 01; kod_lokalizacji = "OD"; output;
+  id = 02; kod_lokalizacji = "MK"; output;
+  id = 03; kod_lokalizacji = "ID"; output;
+  id = 09; kod_lokalizacji = "ID"; output;
+data nowe;
+  id = 05; kod_lokalizacji = "CC"; output;
+run;
+
+data baza;
+	set baza nowe;
+run;
+
+/* proc append */
+proc APPEND base=BAZA data=NOWE;
+run;
+
+proc APPEND base=BAZA data=NOWE( where= (id=05) );
+run;
+
+proc APPEND base=BAZA data=NOWE( where= (1=1) );
+run;
+
+~~~~
