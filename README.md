@@ -1612,3 +1612,29 @@ data razem5B;
 	keep id ile_zbiorow; 
 run;
 ~~~~
+
+bonus
+~~~~sas
+data 
+	test_202501
+	test_202502
+	test_202412
+	test_202411
+	test_202410
+	;
+	set sashelp.class;
+run;
+
+data ALL;
+	set test_202410-test_202412;
+run;
+
+options noDSNFERR;
+data ALL2;
+	set test_202410-test_202502;
+run;
+options DSNFERR;
+
+proc OPTIONS;
+run;
+~~~~
