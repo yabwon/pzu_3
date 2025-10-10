@@ -1355,3 +1355,56 @@ run;
 
 /***************************************/
 ~~~~
+
+while/until-loop
+
+~~~~sas
+/***************************************/
+
+
+data test;
+	id = 1; t="A B C D E"; output;
+	id = 2; t="X Y Z"; output;
+run;
+
+/*
+
+	do while ( <war.> );
+		...
+	end;
+
+	do until( NOT<war.> );
+		...
+	end;
+
+
+*/
+
+data want;
+	set test;
+
+	i=0;
+	do until( polisa = " " );
+		i+1;
+		polisa = SCAN(t, i, " ");
+
+		if polisa = " " then output;
+	end; /* ( polisa = " " ) */
+drop t i;
+run;
+
+data want;
+	set test;
+
+	i=0;
+	do until( 0 );
+		i+1;
+		polisa = SCAN(t, i, " ");
+
+		if polisa = " " then leave;
+			            else output;
+	end;
+drop t i;
+run;
+~~~~
+
