@@ -1147,3 +1147,211 @@ data want;
 run;
 ~~~~
 
+petla (do-loop)
+
+~~~~sas
+
+data slownik;
+	klucz="C"; opis="Centrala"; output;
+	klucz="P"; opis="Poznan"; output;
+	klucz="K"; opis="Katowice"; output;
+run;
+
+data test;
+id = "C"; s='1jan2025'd; baza=123; z=1; output;
+id = "P"; s='1feb2025'd; baza=117; z=3; output;
+id = "K"; s='1apr2025'd; baza=34;  2; output;
+run;
+
+/* granica baza < 10 */
+
+/*
+
+DO i = <start> TO <koniec> BY <podbicie>;
+
+	put i=;
+
+END;
+
+*/
+data _null_;
+	DO i = 15 TO 37 BY 5;
+
+		put i=;
+
+	END;
+
+	put "po" i=;
+run;
+
+
+data _null_;
+s = 15;
+k = 37;
+b = 5;
+
+	DO i = s TO k BY b;
+
+		put i=;
+
+	END;
+
+	put "po" i=;
+run;
+
+data have;
+s = 15;
+k = 37;
+b = 5;
+run;
+
+
+data _null_;
+set have;
+
+	DO i = s TO k BY b;
+
+		put i=;
+
+	END;
+
+	put "po" i=;
+run;
+
+data have;
+s = 15;
+k = 37;
+b = 5;
+output;
+
+s = 1;
+k = 3;
+b = 1;
+output;
+run;
+
+
+data _null_;
+set have;
+
+	DO i = s TO k BY b;
+
+		put _N_= i=;
+
+	END;
+
+	put "po " _N_= i=;
+run;
+
+data test;
+id = "C"; s='1jan2025'd; baza=123; z=1; output;
+id = "P"; s='1feb2025'd; baza=117; z=3; output;
+id = "K"; s='1apr2025'd; baza=34;  z=2; output;
+run;
+
+data want;
+	set test;
+	DO i = baza TO 10 BY -z;
+		
+		output;
+		s+1;	
+	END;
+
+	format s yymmdd10.;
+run;
+
+
+
+data have2;
+id ="ABCDEF";
+  a1=11;
+  a2=12;
+  a3=13;
+  a4=14;
+  output;
+
+id ="GHJIJK";
+  a1=13;
+  a2=15;
+  a3=17;
+  a4=19;
+  output;
+run;
+
+/* od kazdej kwoty w kwartale chce odjac 5 */
+data want;
+	set have2;
+
+	a1=a1-5;
+	a2=a2-5;
+	a3=a3-5;
+	a4=a4-5;
+run;
+
+data want;
+	set have2;
+	
+	ARRAY kwartal[4] a1-a4;
+
+
+ 	do i = 1 to 4;
+		kwartal[i] = kwartal[i] - 5;	
+	end;
+
+output;
+drop i;
+run;
+
+
+
+data have2_5;
+id ="ABCDEF";
+  a1=11;
+  a2=12;
+  a3=13;
+  a4=14;
+  a5=20;
+  b1=100;
+  output;
+
+id ="GHJIJK";
+  a1=13;
+  a2=15;
+  a3=17;
+  a4=19;
+  a5=123;
+  b1=125;
+  output;
+run;
+
+data want;
+	set have2_5;
+	
+	ARRAY kwartal[*] a:; /* *) */
+
+
+ 	do i = 1 to dim(kwartal);
+		kwartal[i] = kwartal[i] - 5;	
+	end;
+
+output;
+drop i;
+run;
+
+
+data want;
+	set have2_5;
+	
+	ARRAY kwartal[*] _numeric_; /* *) */
+
+
+ 	do i = 1 to dim(kwartal);
+		kwartal[i] = kwartal[i] - 5;	
+	end;
+
+output;
+drop i;
+run;
+
+/***************************************/
+~~~~
