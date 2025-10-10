@@ -1638,3 +1638,265 @@ options DSNFERR;
 proc OPTIONS;
 run;
 ~~~~
+
+Merge
+
+~~~~sas
+/* merdżowanie zbiorów */
+/* polecenie MERGE     */
+
+/* 1-do-1 */
+
+data p;
+	a="ABC";
+	b=42;
+	c=3;output;
+	c=2;output;
+	c=1;output;
+run;
+
+data d;
+	retain c 0 d "XYZ" e 123; 
+	do c=1 to 3;
+		output;
+	end;
+run;
+
+proc sort data=p;
+	by C;
+proc sort data=d;
+	by C;
+run;
+
+data razem1;
+	MERGE p d;
+	BY c;
+run;
+
+
+data razem1;
+	MERGE p(in=w_P) d(in=w_D);
+	BY c;
+	put _ALL_;
+run;
+
+
+/* "niedopasowane" wiersze */
+
+data p;
+	a="ABC";
+	b=42;
+	c=1;output;
+	c=2;output;
+	c=3;output;
+run;
+
+data d;
+	retain c 0 d "XYZ" e 123; 
+	do c=2 to 4;
+		output;
+	end;
+run;
+
+data razem2;
+	MERGE p(in=w_P) d(in=w_D);
+	BY c;
+	put _ALL_;
+run;
+
+data 
+	razem_outer
+	razem_inner
+	razem_left
+	razem_right
+	;
+	MERGE p(in=w_p) d(in=w_d);
+	BY c;
+	put _all_;
+	
+	output razem_outer;
+	if w_p=1 AND w_d=1 then output razem_inner;
+	if w_p=1           then output razem_left;
+	if           w_d=1 then output razem_right;
+
+run;
+
+
+/* 1-do-N - jeden do wielu*/
+
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=2;output;
+run;
+
+data d;
+	retain c 0 d "XYZ" e 123; 
+	c=1;d="XY";output;
+	c=2;d="YZ";output;
+run;
+
+data razem3;
+	merge p d;
+	by c;
+run;
+
+
+/* UWAGA!!! */
+/* wiele do wileu "nie działa jak w SQLu!!" */
+/* merge "wiele do wielu" ma zupełnie inną mechanikę działania */
+
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=2;output;
+	b=99;c=2;output;
+run;
+
+data d;
+	retain c 0 e 123; 
+	c=1;d="XY";output;
+	c=2;d="YZ";output;
+	c=2;d="XX";output;
+run;
+
+proc sql;
+	select *
+	from 
+	p join d
+	on p.c=d.c
+	;
+quit;
+
+data razem3;
+	merge p d;
+	by c;
+run;
+
+/* "różne takie sytuacje" */
+
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=2;output;
+run;
+
+data d; 
+	cc=1;d="XY";output;
+	cc=2;d="YZ";output;
+run;
+
+data razem3;
+	merge p d(rename=(cc=c));
+	by c;
+run;
+
+
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=2;output;
+run;
+
+data d; 
+	c=1;a="XY";output;
+	c=2;a="YZ";output;
+run;
+
+data razem4;
+	merge p d;
+	by c;
+run;
+
+
+
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=2;output;
+run;
+
+data d; 
+	c="1";d="XY";output;
+	c="2";d="YZ";output;
+run;
+
+data razem5; /* ! */
+	merge p d;
+	by c;
+run;
+
+data d1; 
+set d(rename=(c=cc));
+c = input(cc,best.);
+drop cc;
+run;
+
+data razem5;
+	merge p d1;
+	by c;
+run;
+
+/*----------------------------*/
+/* trzy zbiory w jednym łączeniu (ta sama zmienna) */
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=3;output;
+run;
+
+data d; 
+	c=1;d="XY";output;
+	c=2;d="YZ";output;
+run;
+
+data t; 
+	c=2;e=12345;output;
+	c=3;e=67890;output;
+run;
+
+data razem6;
+	merge p d t;
+	by c;
+run;
+
+
+/* trzy zbiory w jednym łączeniu, różne zmienne */
+data p;
+	a="ABC";
+	b=17;c=1;output;
+	b=33;c=2;output;
+	b=42;c=3;output;
+run;
+
+data d; 
+	c=1;d="XY";output;
+	c=2;d="YZ";output;
+run;
+
+data t; 
+	d="XY";e=12345;output;
+	d="YZ";e=67890;output;
+run;
+
+data razem7;
+	merge p d;
+	by c;
+run;
+
+proc sort data=razem7;
+by d;
+run;
+
+data razem8;
+	merge razem7 t;
+	by d;
+run;
+~~~~
+
