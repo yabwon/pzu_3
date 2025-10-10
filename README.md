@@ -1940,5 +1940,30 @@ oferta="X"; opis="Oferta eXtremalna"; output;
 oferta="Y"; opis="Youpee!! oferta"; output; 
 oferta="Z"; opis="Zjefajna ofera"; output; 
 oferta="T"; opis="Tragiczna+"; output;
+oferta="O"; opis="OLd jak świat"; output;
+run;
+
+
+
+data ab;
+	MERGE A(in=aa) B(in=bb);
+	by ID;
+
+	if aa=1 then output;
+run;
+
+proc sort data=ab;
+	by oferta;
+run;
+
+proc sort data=c;
+	by oferta;
+run;
+data abc;
+	MERGE ab(in=aa) C;
+	by oferta;
+
+	if aa=1 then output;
+	drop oferta;
 run;
 ~~~~
