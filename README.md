@@ -1573,3 +1573,42 @@ proc APPEND base=BAZA data=NOWE( where= (1=1) );
 run;
 
 ~~~~
+
+przeplot
+~~~~sas
+/* interleaving - przeplot */
+
+data A;
+  id = 00; kod_lokalizacji = "CC"; output;
+  id = 01; kod_lokalizacji = "OD"; output;
+  id = 02; kod_lokalizacji = "MK"; output;
+  id = 03; kod_lokalizacji = "ID"; output;
+  id = 09; kod_lokalizacji = "ID"; output;
+  id = 11; kod_lokalizacji = "ID"; output;
+data B;
+  id = 05; kod_lokalizacji = "CC"; output;
+  id = 06; kod_lokalizacji = "OD"; output;
+  id = 07; kod_lokalizacji = "MK"; output;
+  id = 08; kod_lokalizacji = "MD"; output;
+  id = 11; kod_lokalizacji = "ID"; output;
+run;
+
+
+data razem5;
+	set a(in=w_a) b(in=w_b);
+	BY id;     /* <------------------------- !*/
+	put _all_;
+run;
+
+
+data razem5B;
+	set a(in=w_a) b(in=w_b);
+	BY id; 
+	
+	if first.ID then ile_zbiorow=0;
+	ile_zbiorow + (w_a+w_b);
+
+	if last.id AND ile_zbiorow>1 then output;
+	keep id ile_zbiorow; 
+run;
+~~~~
