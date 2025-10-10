@@ -1408,3 +1408,36 @@ drop t i;
 run;
 ~~~~
 
+~~~~sas
+/*
+
+do while(1);
+	...
+	<STOP>
+end;
+
+do i=1 by 0;
+	...
+	<STOP>
+end;
+
+do i=1 by 1;
+	...
+	i
+	<STOP>
+end;
+
+*/
+
+data want;
+	set test;
+
+	do i = 1 by 1 until( 0 ); /* ! uwaga to jest petla nieskonczona */
+		polisa = SCAN(t, i, " ");
+
+		if polisa = " " then leave;
+			            else output;
+	end;
+drop t i;
+run;
+~~~~
