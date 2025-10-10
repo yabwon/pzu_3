@@ -1900,3 +1900,45 @@ data razem8;
 run;
 ~~~~
 
+zadanie
+~~~~sas
+/*
+1)zbudujemy 3 zbiory
+A) id (num, 1 100), nazwa "ABC" + ID
+B) id (num, 1 200), oferta X Y Z T <- losowo
+C) 4 obserwacje oferta X Y Z T  opis = "Oferta eXtremalna";
+"Youpee!! oferta" "Zjefajna ofera" "Tragiczna+"
+
+2) łaczenie wszystkiego!
+*/
+
+
+data A;
+do id = 1 to 100;
+	length nazwa $ 8;
+	nazwa=CATX(" ","ABC",put(id,3.));
+	output;
+end;
+run;
+
+proc Contents data=A;
+run;
+
+data B;
+call streaminit(1234567);
+do id = 1 to 200;
+	length oferta $ 1;
+	i = RAND('integer',1,4);
+	oferta = SCAN("X Y Z T",i," ");
+	output;
+end;
+drop i;
+run;
+
+data C;
+oferta="X"; opis="Oferta eXtremalna"; output;
+oferta="Y"; opis="Youpee!! oferta"; output; 
+oferta="Z"; opis="Zjefajna ofera"; output; 
+oferta="T"; opis="Tragiczna+"; output;
+run;
+~~~~
