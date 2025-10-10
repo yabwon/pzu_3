@@ -1441,3 +1441,104 @@ data want;
 drop t i;
 run;
 ~~~~
+
+
+~~~~sas
+/* Łączenie tabel */
+/* Laczenie tabel */
+
+/* konkatenacja, sklejanie w pionie */
+
+data A;
+  id = 00; kod_lokalizacji = "CC"; output;
+  id = 01; kod_lokalizacji = "OD"; output;
+  id = 02; kod_lokalizacji = "MK"; output;
+  id = 03; kod_lokalizacji = "ID"; output;
+  id = 09; kod_lokalizacji = "ID"; output;
+data B;
+  id = 05; kod_lokalizacji = "CC"; output;
+  id = 06; kod_lokalizacji = "OD"; output;
+  id = 07; kod_lokalizacji = "MK"; output;
+  id = 08; kod_lokalizacji = "MD"; output;
+  id = 11; kod_lokalizacji = "ID"; output;
+run;
+
+
+data razem1;
+	set A B;
+run;
+
+data C;
+  ix = 12; kod_lokalizacji = "OD"; output;
+  ix = 13; kod_lokalizacji = "MD"; output;
+  ix = 14; kod_lokalizacji = "ID"; output;
+run;
+
+data razem2;
+	set A B C;
+run;
+
+/*
+id kod_lokalizacji ix _ERROR_ _N_
+*/
+
+/*
+RENAME
+RENAME=
+*/
+data razem2;
+	set A B C( RENAME=( ix=id ) );
+run;
+
+
+
+data D;
+  id = '15'; kod_lokalizacji = "CC"; output;
+  id = '16'; kod_lokalizacji = "OD"; output;
+run;
+
+
+
+data razem3; /* !!!!! */
+	set A B C( RENAME=( ix=id ) ) D;
+run;
+
+data razem3; 
+	set A B C( RENAME=( ix=id ) ) D( RENAME=( id=id_c ) );
+run;
+
+data razem3; 
+	set A B C( RENAME=( ix=id ) ) 
+		D( RENAME=( id=id_c ) IN=jestem_w_D); /* IN= */
+
+	/*putlog jestem_w_D=;*/
+
+	if jestem_w_D=1 then id = input(id_c, best.) ; /* id <- ID_C jako liczbe */ 
+	drop id_c; 
+run;
+
+
+data E;
+  id = 17; kod_lokalizacji = "XYZ"; output;
+run;
+
+data razem4; 
+	set A B E;  
+run;
+
+/*
+id{8} kod_lokalizacji{2} _ERROR_ _N_
+*/	
+
+data razem4;
+	length id 8 kod_lokalizacji $ 3;
+	set A B E;  
+run;
+/*
+id{8} kod_lokalizacji{3} _ERROR_ _N_
+*/
+
+data razem4B;
+	set E A B ; /* ! */ 
+run;
+~~~~
